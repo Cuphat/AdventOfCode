@@ -8,7 +8,7 @@ namespace AdventOfCode2017
     {
         private static void Day4()
         {
-            var input = @"nyot babgr babgr kqtu kqtu kzshonp ylyk psqk
+            const string input = @"nyot babgr babgr kqtu kqtu kzshonp ylyk psqk
 iix ewj rojvbkk phrij iix zuajnk tadv givslju ewj bda
 isjur jppvano vctnpjp ngwzdq pxqfrk mnxxes zqwgnd giqh
 ojufqke gpd olzirc jfao cjfh rcivvw pqqpudp
