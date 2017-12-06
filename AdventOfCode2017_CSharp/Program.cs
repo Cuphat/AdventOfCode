@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AdventOfCode2017
+namespace AdventOfCode2017_CSharp
 {
     internal static partial class Program
     {

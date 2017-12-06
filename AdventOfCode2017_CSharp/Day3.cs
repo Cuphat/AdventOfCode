@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AdventOfCode2017
+namespace AdventOfCode2017_CSharp
 {
     internal static partial class Program
     {
