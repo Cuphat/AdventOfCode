@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace AdventOfCode2017
 {
@@ -171,8 +170,7 @@ namespace AdventOfCode2017
 
                     // Calculate the number that should be here.
                     var sum = 0;
-                    var coordinates = currentLocation.GetSurroundingCoordinates().ToList();
-                    foreach (var coordinate in coordinates)
+                    foreach (var coordinate in currentLocation.GetSurroundingCoordinates())
                     {
                         if (!map.ContainsKey(coordinate))
                             continue;
