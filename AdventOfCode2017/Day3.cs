@@ -161,9 +161,10 @@ namespace AdventOfCode2017
                 var map = new Dictionary<Coordinate, int> { { currentLocation, 1 } };
                 var direction = Direction.East;
                 var maxLevel = 0;
+                var lastNumber = 1;
 
                 // Make us our spiral.
-                for (var i = 2; i <= input; i++)
+                while (lastNumber < input)
                 {
                     // Move us to the next location.
                     currentLocation = new Coordinate(currentLocation, direction);
@@ -177,16 +178,16 @@ namespace AdventOfCode2017
                             continue;
                         sum += map[coordinate];
                     }
-                    i = sum;
+                    lastNumber = sum;
 
                     // Add this number to the map.
-                    map.Add(currentLocation, i);
+                    map.Add(currentLocation, sum);
 
                     // Update our direction and level.
                     (direction, maxLevel) = UpdateDirectionAndLevel(currentLocation, direction, maxLevel);
                 }
 
-                Console.WriteLine($"The first number higher than {input} in the spiral is {map.Values.Max()}.");
+                Console.WriteLine($"The first number higher than {input} in the spiral is {lastNumber}.");
             }
         }
     }
