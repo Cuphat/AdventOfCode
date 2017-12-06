@@ -40,22 +40,7 @@ namespace AdventOfCode2017_CSharp
 
             // Part 1
             {
-                var sum = 0;
-                foreach (var line in inputList)
-                {
-                    var largest = int.MinValue;
-                    var smallest = int.MaxValue;
-                    foreach (var number in line)
-                    {
-                        if (number > largest)
-                            largest = number;
-                        if (number < smallest)
-                            smallest = number;
-                    }
-                    if (largest < smallest)
-                        continue;
-                    sum += largest - smallest;
-                }
+                var sum = inputList.Sum(i => i.Max() - i.Min());
                 Console.WriteLine($"Sum for part 1: {sum}");
             }
 

@@ -21,11 +21,12 @@ namespace AdventOfCode2017_CSharp
         private static void Day6(IEnumerable<int> input)
         {
             var currentConfiguration = input.ToList();
+            string ListHash(IEnumerable<int> l) => string.Join("	", l);
 
             var configurationsSeen = new List<string>(); // Was a HashSet for part 1, but a List to maintain order for part 2.
-            while (!configurationsSeen.Contains(string.Join("	", currentConfiguration)))
+            while (!configurationsSeen.Contains(ListHash(currentConfiguration)))
             {
-                configurationsSeen.Add(string.Join("	", currentConfiguration));
+                configurationsSeen.Add(ListHash(currentConfiguration));
 
                 var highestBankIndex = currentConfiguration.FindIndex(n => n == currentConfiguration.Max());
                 var blocks = currentConfiguration[highestBankIndex];
@@ -38,7 +39,7 @@ namespace AdventOfCode2017_CSharp
                 }
             }
 
-            var duplicateIndex = configurationsSeen.FindIndex(c => c == string.Join("	", currentConfiguration));
+            var duplicateIndex = configurationsSeen.FindIndex(c => c == ListHash(currentConfiguration));
             var loopSize = configurationsSeen.Count - duplicateIndex;
 
             Console.WriteLine($"Number of configurations seen before hitting a duplicate: {configurationsSeen.Count}");
