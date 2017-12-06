@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AdventOfCode2017
 {
@@ -67,50 +68,126 @@ namespace AdventOfCode2017
                         throw new IndexOutOfRangeException("Direction is not a valid value.");
                 }
             }
+
+            public IEnumerable<Coordinate> GetSurroundingCoordinates()
+            {
+                var xCoords = new[] {X - 1, X, X + 1};
+                var yCoords = new[] {Y - 1, Y, Y + 1};
+                foreach (var x in xCoords)
+                {
+                    foreach (var y in yCoords)
+                    {
+                        if (x == X && y == Y)
+                            continue;
+                        yield return new Coordinate(x, y);
+                    }
+                }
+            }
+
+            public override bool Equals(object obj)
+            {
+                return obj is Coordinate coordinate && this == coordinate;
+            }
+            public override int GetHashCode()
+            {
+                return X.GetHashCode() ^ Y.GetHashCode();
+            }
+            public static bool operator ==(Coordinate a, Coordinate b)
+            {
+                return a?.X == b?.X && a?.Y == b?.Y;
+            }
+            public static bool operator !=(Coordinate a, Coordinate b)
+            {
+                return !(a == b);
+            }
+        }
+
+        private static (Direction Direction, int MaxLevel)
+            UpdateDirectionAndLevel(Coordinate currentLocation, Direction direction, int maxLevel)
+        {
+            // Get the current level we are on.
+            var currentLevel = Math.Abs(currentLocation.GetRelevantXorY(direction));
+
+            // If we haven't hit the peak, just return now.
+            if (currentLevel < maxLevel) return (direction, maxLevel);
+
+            // Special case: East can move 1 past max. If we are currently 1 past max, increase max and change.
+            // Otherwise, if we're at max, don't change directions and just return.
+            switch (direction)
+            {
+                case Direction.East when currentLevel > maxLevel:
+                    maxLevel++;
+                    break;
+                case Direction.East:
+                    return (direction, maxLevel);
+            }
+
+            // Increment direction.
+            direction++;
+            if (!Enum.IsDefined(typeof(Direction), direction))
+                direction = Direction.East;
+
+            return (direction, maxLevel);
         }
 
         private static void Day3(int input)
         {
-            var currentLocation = new Coordinate(0, 0);
-            var map = new Dictionary<int, Coordinate> { { 1, currentLocation } };
-            var direction = Direction.East;
-            var maxLevel = 0;
-
-            // Make us our spiral.
-            for (var i = 2; i <= input; i++)
+            // Part 1
             {
-                // Move us and add this number to the map.
-                currentLocation = new Coordinate(currentLocation, direction);
-                map.Add(i, currentLocation);
+                var currentLocation = new Coordinate(0, 0);
+                var map = new Dictionary<int, Coordinate> {{1, currentLocation}};
+                var direction = Direction.East;
+                var maxLevel = 0;
 
-                // Get the current level we are on.
-                var currentLevel = Math.Abs(currentLocation.GetRelevantXorY(direction));
-
-                // If we've hit the peak, change direction.
-                if (currentLevel >= maxLevel)
+                // Make us our spiral.
+                for (var i = 2; i <= input; i++)
                 {
-                    // Special case: East can move 1 past max. If we are currently 1 past max, increase max and change.
-                    if (direction == Direction.East && currentLevel > maxLevel)
-                    {
-                        maxLevel++;
-                        direction = Direction.North;
-                        continue;
-                    }
+                    // Move us and add this number to the map.
+                    currentLocation = new Coordinate(currentLocation, direction);
+                    map.Add(i, currentLocation);
 
-                    // If we reach this, we're at exactly the max and still moving East.
-                    if (direction == Direction.East)
-                        continue;
-
-                    // Increment direction.
-                    direction++;
-                    if (!Enum.IsDefined(typeof(Direction), direction))
-                        direction = Direction.East;
+                    // Update our direction and level.
+                    (direction, maxLevel) = UpdateDirectionAndLevel(currentLocation, direction, maxLevel);
                 }
+
+                var inputCoordinate = map[input];
+                var distance = Math.Abs(inputCoordinate.X) + Math.Abs(inputCoordinate.Y);
+                Console.WriteLine($"From {input} back to center takes {distance} moves.");
             }
 
-            var inputCoordinate = map[input];
-            var distance = Math.Abs(inputCoordinate.X) + Math.Abs(inputCoordinate.Y);
-            Console.WriteLine($"From {input} back to center takes {distance} moves.");
+            // Part 2
+            {
+                var currentLocation = new Coordinate(0, 0);
+                var map = new Dictionary<Coordinate, int> { { currentLocation, 1 } };
+                var direction = Direction.East;
+                var maxLevel = 0;
+
+                // Make us our spiral.
+                for (var i = 2; i <= input; i++)
+                {
+                    // Move us to the next location.
+                    currentLocation = new Coordinate(currentLocation, direction);
+
+                    // Calculate the number that should be here.
+                    var sum = 0;
+                    var coordinates = currentLocation.GetSurroundingCoordinates().ToList();
+                    foreach (var coordinate in coordinates)
+                    {
+                        if (!map.ContainsKey(coordinate))
+                            continue;
+                        sum += map[coordinate];
+                    }
+                    i = sum;
+
+                    // Add this number to the map.
+                    map.Add(currentLocation, i);
+
+                    // Update our direction and level.
+                    (direction, maxLevel) = UpdateDirectionAndLevel(currentLocation, direction, maxLevel);
+                }
+
+                Console.WriteLine($"The first number higher than {input} in the spiral is {map.Values.Max()}.");
+            }
         }
     }
 }
