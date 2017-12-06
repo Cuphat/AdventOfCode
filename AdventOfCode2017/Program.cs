@@ -31,6 +31,9 @@ namespace AdventOfCode2017
                 case "5":
                     Day5();
                     break;
+                case "6":
+                    Day6();
+                    break;
                 default:
                     throw new NotImplementedException("Day specified not implemented.");
             }
