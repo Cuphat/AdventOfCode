@@ -34,6 +34,9 @@ namespace AdventOfCode2017_CSharp
                 case "6":
                     Day6();
                     break;
+                case "7":
+                    Day7();
+                    break;
                 default:
                     throw new NotImplementedException("Day specified not implemented.");
             }
