@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace AdventOfCode2017_CSharp
 {
@@ -1029,7 +1028,6 @@ w inc -854 if jlg < -1808";
                 var split = line.Split(' ');
                 if (split.Length < 7)
                     continue;
-
 
                 // Current register.
                 if (!registers.ContainsKey(split[0]))
